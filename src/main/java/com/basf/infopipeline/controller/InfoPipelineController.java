@@ -27,6 +27,8 @@ public class InfoPipelineController {
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   public void deleteMongo() {
 
+    //call mongoservice ( get mongotemplate  and do mongoTemplate.getDb().dropDatabase(); )
+
   }
 
   @GetMapping("/import")

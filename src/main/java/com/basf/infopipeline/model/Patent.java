@@ -1,23 +1,19 @@
-//package com.basf.infopipeline.model;
-//
-//import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-//import com.fasterxml.jackson.annotation.JsonProperty;
-//import lombok.Data;
-//
-//@JsonIgnoreProperties(ignoreUnknown=true)
-//@Data
-//public class Patent {
-//
-//  private String date;
-//  //metadata
-//  private ApplicationReference applicationReference;
-//  @JsonProperty("invention-title")
-//  private String inventionTitle;
-//
-//  //abstract is Html like
-//  private String  abstractText;
-//
-//  //description is Html
-//  private String description;
-//
-//}
+package com.basf.infopipeline.model;
+
+import lombok.Data;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+//FIXME: for simplicity we use the same object for model and data , but we should separate to avoid bleeding between parts of the app.
+@Document(collection = "Patent")
+@Data
+public class Patent {
+
+  private ApplicationReference applicationReference;
+
+  private String inventionTitle;
+
+  private String abstractText;
+
+  private String date;
+
+}

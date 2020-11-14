@@ -2,7 +2,7 @@ package com.basf.infopipeline.service;
 
 import com.basf.infopipeline.model.ApplicationReference;
 import com.basf.infopipeline.model.NamedEntity;
-import com.basf.infopipeline.repository.PatentDao;
+import com.basf.infopipeline.model.Patent;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
@@ -74,7 +74,7 @@ public class ImportFileServiceImpl implements ImportFileService {
         ApplicationReference applicationReference = (ApplicationReference) jaxbUnmarshaller.unmarshal (application);
 
 
-        PatentDao patent = new PatentDao();
+        Patent patent = new Patent();
         patent.setAbstractText(abstractText);
         patent.setInventionTitle(title);
         patent.setDate(date);
