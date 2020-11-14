@@ -27,13 +27,15 @@ public class ImportFileServiceImpl implements ImportFileService {
 
 
   private final NLPService nlpService;
-  private final DataService dataService;
+  private final PatentDataService patentDataService;
+  private final NamedEntityDataService namedEntityDataService;
 
   @Autowired
-  public ImportFileServiceImpl(DataService dataService, NLPService nlpService) {
-    this.dataService = dataService;
+  public ImportFileServiceImpl(PatentDataService patentDataService, NamedEntityDataService namedEntityDataService,
+      NLPService nlpService) {
+    this.patentDataService = patentDataService;
     this.nlpService = nlpService;
-
+    this.namedEntityDataService = namedEntityDataService;
   }
 
 
@@ -68,9 +70,10 @@ public class ImportFileServiceImpl implements ImportFileService {
         //FIXME:convert Nodes to Java object using Jackson
 //        patent.setApplicationReference(applicationReference);
 
-        dataService.persist(patent);
+        patentDataService.persist(patent);
 
         NamedEntity namedEntity = nlpService.findNamedEntity(abstractText, description);
+        namedEntityDataService.persist(namedEntity);
 
         System.out.println(description);
 

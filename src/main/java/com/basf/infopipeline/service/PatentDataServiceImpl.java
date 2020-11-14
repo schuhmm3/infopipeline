@@ -7,20 +7,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class DataServiceImpl implements DataService {
+public class PatentDataServiceImpl implements PatentDataService {
 
 
   private PatentRepository patentRepository;
 
   @Autowired
-  public DataServiceImpl(PatentRepository patentRepository) {
+  public PatentDataServiceImpl(PatentRepository patentRepository) {
     this.patentRepository = patentRepository;
   }
 
   @Override
   public void persist(PatentDao patent) {
-
     patentRepository.save(patent);
-
   }
 }
