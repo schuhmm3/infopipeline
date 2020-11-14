@@ -1,16 +1,18 @@
 package com.basf.infopipeline.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.xml.bind.annotation.XmlElement;
 
 public class DocumentId {
 
+  @XmlElement
   private String country;
-  @JsonProperty("doc-number")
+  @XmlElement(name = "doc-number")
   private String docNumber;
+  @XmlElement
   private String kind;
+  @XmlElement
   private String date;
 
-//    <publication-reference publ-desc="Granted patent as first publication">
 //      <document-id>
 //        <country>US</country>
 //        <doc-number>06189068</doc-number>
@@ -20,6 +22,5 @@ public class DocumentId {
 //      <document-id data-format="questel">
 //        <doc-number>US6189068</doc-number>
 //      </document-id>
-//    </publication-reference>
 
 }

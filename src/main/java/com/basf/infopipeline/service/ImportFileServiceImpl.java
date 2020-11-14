@@ -1,7 +1,10 @@
 package com.basf.infopipeline.service;
 
+import com.basf.infopipeline.model.ApplicationReference;
 import com.basf.infopipeline.model.NamedEntity;
 import com.basf.infopipeline.repository.PatentDao;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
@@ -66,12 +69,16 @@ public class ImportFileServiceImpl implements ImportFileService {
         expression = XPATH_APPLICATION;
         Node application = (Node) xPath.compile(expression).evaluate(doc, XPathConstants.NODE);
 
+        JAXBContext jaxbContext = JAXBContext.newInstance(ApplicationReference.class);
+        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+        ApplicationReference applicationReference = (ApplicationReference) jaxbUnmarshaller.unmarshal (application);
+
+
         PatentDao patent = new PatentDao();
         patent.setAbstractText(abstractText);
         patent.setInventionTitle(title);
         patent.setDate(date);
-        //FIXME:convert Nodes to Java object using Jackson
-//        patent.setApplicationReference(applicationReference);
+        patent.setApplicationReference(applicationReference);
 
         log.debug("Persisting patent file");
         patentDataService.persist(patent);

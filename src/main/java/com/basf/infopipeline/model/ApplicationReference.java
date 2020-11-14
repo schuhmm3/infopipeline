@@ -1,11 +1,13 @@
 package com.basf.infopipeline.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
-@JsonIgnoreProperties(ignoreUnknown=true)
+@XmlRootElement(name = "application-reference")
 public class ApplicationReference {
 
+  @XmlElement(name = "document-id")
   private List<DocumentId> documents;
 
 
