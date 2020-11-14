@@ -3,11 +3,21 @@ package com.basf.infopipeline.service;
 import java.io.IOException;
 import java.io.InputStream;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.mock.web.MockMultipartFile;
 
 class ImportFileServiceImplTest {
 
-  private ImportFileServiceImpl importFileService = new ImportFileServiceImpl();
+  @Mock
+  private PatentDataService patentDataService;
+  @Mock
+  private NamedEntityDataService namedEntityDataService;
+  @Mock
+  private NLPService nlpService;
+
+  @InjectMocks
+  private ImportFileServiceImpl importFileService;
 
   @Test
   void testImport() throws IOException {

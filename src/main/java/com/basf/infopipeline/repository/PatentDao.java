@@ -4,7 +4,7 @@ import com.basf.infopipeline.model.ApplicationReference;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document
+@Document(collection = "Patent")
 @Data
 public class PatentDao {
 

@@ -7,6 +7,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,6 +15,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 @Service
+@Slf4j
 public class ImportFileServiceImpl implements ImportFileService {
 
 
@@ -45,6 +47,7 @@ public class ImportFileServiceImpl implements ImportFileService {
     if (!xmlFile.isEmpty()) {
       try {
 
+        log.debug("Parsing file :" + xmlFile.getOriginalFilename());
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(xmlFile.getInputStream());
@@ -70,12 +73,15 @@ public class ImportFileServiceImpl implements ImportFileService {
         //FIXME:convert Nodes to Java object using Jackson
 //        patent.setApplicationReference(applicationReference);
 
+        log.debug("Persisting patent file");
         patentDataService.persist(patent);
-
+        log.debug("Parsing named entities from abstract and description");
         NamedEntity namedEntity = nlpService.findNamedEntity(abstractText, description);
+        log.debug("Persisting named entities");
+        //FIXME: how do we want to persist NE?
+        // what use are we gonna have ? keep patent ID ? duplicates ? one entry per NE ?Is it gonna be like a lookuptable or are we gonna run statistics on chemicals
         namedEntityDataService.persist(namedEntity);
-
-        System.out.println(description);
+        log.debug("End processing for file :" + xmlFile.getOriginalFilename());
 
       } catch (Exception e) {
 

@@ -15,11 +15,11 @@ public class NLPServiceImpl implements NLPService {
 
     NamedEntity namedEntity = new NamedEntity(new ArrayList<>());
 
-    if(StringUtils.isNotEmpty(abstractText)) {
+    if (StringUtils.isNotEmpty(abstractText)) {
       Document abstractDocument = new Document(abstractText);
       namedEntity.getNamedEntities().addAll(getNE(abstractDocument));
     }
-    if(StringUtils.isNotEmpty(description)) {
+    if (StringUtils.isNotEmpty(description)) {
       Document descriptionDocument = new Document(description);
       namedEntity.getNamedEntities().addAll(getNE(descriptionDocument));
     }
@@ -28,8 +28,21 @@ public class NLPServiceImpl implements NLPService {
   }
 
   private List<String> getNE(Document doc) {
-    List<String> nes = new ArrayList<>();
-    doc.sentences().forEach(s -> nes.addAll(s.nerTags()));
-    return nes;
+    //TODO:Chemicals are returned as MISC type, filter by MISC type. Then see bonus question about ChemNER.
+    // how to get value of identified NE??? punctuations count as elements.
+    //TODO:Maybe there is a better way to get the Value associated to the tag?
+    //TODO: this function does not care about duplicates, maybe improve with a count foreach unique NE found in each patent ? depending on business requirements
+    List<String> neValues = new ArrayList<>();
+    doc.sentences().forEach(
+        s -> {
+          List<String> nerTags = s.nerTags();
+          for (int i = 0; i < nerTags.size(); i++) {
+            if ("MISC".equals(nerTags.get(i))) {
+              neValues.add(s.originalText(i));
+            }
+          }
+        }
+    );
+    return neValues;
   }
 }
