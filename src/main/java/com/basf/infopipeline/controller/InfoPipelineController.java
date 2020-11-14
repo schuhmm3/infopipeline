@@ -13,7 +13,8 @@ public class InfoPipelineController {
 
   @PostMapping("/import")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
-  public void importFile(@RequestParam("xmlFile") MultipartFile csvFile){
+  public void importFile(@RequestParam("xmlFile") MultipartFile xmlFile){
+
 
   }
 
