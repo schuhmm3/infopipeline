@@ -1,10 +1,12 @@
 package com.basf.infopipeline.service;
 
+import com.basf.infopipeline.repository.PatentDao;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
@@ -20,6 +22,16 @@ public class ImportFileServiceImpl implements ImportFileService {
   private static final String XPATH_TITLE = "/questel-patent-document/bibliographic-data/invention-title";
   private static final String XPATH_ABSTRACT = "/questel-patent-document/abstract";
   private static final String XPATH_DESCRIPTION = "/questel-patent-document/description";
+  private static final String XPATH_ID = "/questel-patent-document/description";
+
+
+  private DataService dataService;
+
+  @Autowired
+  public ImportFileServiceImpl(DataService dataService) {
+    this.dataService = dataService;
+
+  }
 
 
   @Override
@@ -31,9 +43,6 @@ public class ImportFileServiceImpl implements ImportFileService {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(xmlFile.getInputStream());
-
-        //optional, but recommended
-        //read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
         doc.getDocumentElement().normalize();
 
         XPath xPath = XPathFactory.newInstance().newXPath();
@@ -48,6 +57,15 @@ public class ImportFileServiceImpl implements ImportFileService {
         String description = (String) xPath.compile(expression).evaluate(doc, XPathConstants.STRING);
         expression = XPATH_APPLICATION;
         Node application = (Node) xPath.compile(expression).evaluate(doc, XPathConstants.NODE);
+
+        PatentDao patent = new PatentDao();
+        patent.setAbstractText(abstractText);
+        patent.setInventionTitle(title);
+        patent.setDate(date);
+        //FIXME:convert Nodes to Java object using Jackson
+//        patent.setApplicationReference(applicationReference);
+
+        dataService.persist(patent);
 
         System.out.println(description);
 
