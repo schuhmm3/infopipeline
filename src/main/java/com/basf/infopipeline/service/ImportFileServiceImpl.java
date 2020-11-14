@@ -1,5 +1,6 @@
 package com.basf.infopipeline.service;
 
+import com.basf.infopipeline.model.NamedEntity;
 import com.basf.infopipeline.repository.PatentDao;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -25,11 +26,13 @@ public class ImportFileServiceImpl implements ImportFileService {
   private static final String XPATH_ID = "/questel-patent-document/description";
 
 
-  private DataService dataService;
+  private final NLPService nlpService;
+  private final DataService dataService;
 
   @Autowired
-  public ImportFileServiceImpl(DataService dataService) {
+  public ImportFileServiceImpl(DataService dataService, NLPService nlpService) {
     this.dataService = dataService;
+    this.nlpService = nlpService;
 
   }
 
@@ -66,6 +69,8 @@ public class ImportFileServiceImpl implements ImportFileService {
 //        patent.setApplicationReference(applicationReference);
 
         dataService.persist(patent);
+
+        NamedEntity namedEntity = nlpService.findNamedEntity(abstractText, description);
 
         System.out.println(description);
 
