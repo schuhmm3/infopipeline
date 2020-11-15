@@ -1,12 +1,16 @@
 package com.basf.infopipeline.service;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.zip.ZipFile;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 
+@ExtendWith(MockitoExtension.class)
 class ImportFileServiceImplTest {
 
   @Mock
@@ -22,13 +26,11 @@ class ImportFileServiceImplTest {
   @Test
   void testImport() throws Exception {
 
-    final InputStream inputStream = getClass().getClassLoader().getResourceAsStream("US06198563B1.xml");
-    MockMultipartFile mockMultipartFile = new MockMultipartFile("US06198563B1.xml", inputStream);
+    MockMultipartFile mockMultipartFile = new MockMultipartFile("US0617.zip", getClass().getResourceAsStream(("US0617.zip")));
 
     importFileService.importFile(mockMultipartFile);
 
     //FIXME: check various services are called with Mockito.times()
-
 
   }
 
