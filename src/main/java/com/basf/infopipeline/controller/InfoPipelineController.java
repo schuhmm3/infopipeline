@@ -27,9 +27,23 @@ public class InfoPipelineController {
 
   @PostMapping("/import")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
-  public void importFile(@RequestParam("xmlFile") MultipartFile xmlFile) {
+  public void importFile(@RequestParam("zipFile") MultipartFile zipFile) {
     try {
-      importFileService.importFile(xmlFile);
+      importFileService.importFile(zipFile);
+    } catch (Exception e) {
+      //FIXME: deal with different exceptions and return HTTP code that fits
+      //we could distinguish 400 bad request for malformed xml file, then 5XX for internal errors (mongo not available, ...)
+      throw new ResponseStatusException(
+          HttpStatus.INTERNAL_SERVER_ERROR, "Internal error", e);
+    }
+
+  }
+
+  @PostMapping("/import/xml")
+  @ResponseStatus(value = HttpStatus.NO_CONTENT)
+  public void importXmlFile(@RequestParam("xmlFile") MultipartFile xmlFile) {
+    try {
+      importFileService.importXmlFile(xmlFile);
     } catch (Exception e) {
       //FIXME: deal with different exceptions and return HTTP code that fits
       //we could distinguish 400 bad request for malformed xml file, then 5XX for internal errors (mongo not available, ...)
