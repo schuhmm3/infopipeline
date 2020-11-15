@@ -20,7 +20,7 @@ class ImportFileServiceImplTest {
   private ImportFileServiceImpl importFileService;
 
   @Test
-  void testImport() throws IOException {
+  void testImport() throws Exception {
 
     final InputStream inputStream = getClass().getClassLoader().getResourceAsStream("US06198563B1.xml");
     MockMultipartFile mockMultipartFile = new MockMultipartFile("US06198563B1.xml", inputStream);
