@@ -22,9 +22,11 @@ Then you can use a basic curl command to call the different endpoints
     curl -X POST http://localhost:8080/db/drop
     
 
+FIXME: package as docker image
+
 ## Design decisions
 
-Java vs python, I am more comfortable with java thus I choose Java.
+Java vs python, I am more comfortable with java thus I chose Java.
 I went with springboot for ease of use, and production ready features. We could also have looked at other frameworks such as micronaut for example.
 Spring provides and easy way to build the rest controllers needed for the API, supports Mongo via spring data (could also be easy to switch to another database using JPA as intermediate and then just switching implementations of repositories)
 
@@ -34,7 +36,7 @@ Both endpoints could have been defined as contract first with OpenAPi with Swagg
  
 Parsing the xml is done with a DOM parser, with the use of Xpath expressions to retrieve the elements.
 Also we use JAXB mappings to extract the application-reference part as an object.
-I choose this approach because judging from the size of the files there is no problem in parsing them to memory and it is easier to manipulate, if that was a problem we could try using Stax (streaming) for example.
+I chose this approach because judging from the size of the files there is no problem in parsing them to memory and it is easier to manipulate, if that was a problem we could try using Stax (streaming) for example.
 Also the code is structured in such way that we could switch the parser implementations if we want to try another library.
 
 Inserts in Mongo are done using the java objects.
@@ -48,4 +50,10 @@ For now we persist the NE for each xml file, we could add more info if we had mo
 
 
 ## Scalability and maintainability
-()changes in data volumes and formats
+
+Split in various micros to enable scalability (database persist micro, Ner micro with more RAM since its heavy), 
+Deploy containerized micros and scale accordingly using platform capabilities (Kubernetes or similar on Openshift, AWS, GKE, Azure)
+Introduce more asynchronicity to avoid blocking threads and isolate I/O (namely database persists)
+Use message broker for communication between micros ( Kafka or similar) [or expose rest APIs but broker approach is superior]
+
+
