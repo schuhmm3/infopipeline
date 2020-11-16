@@ -5,15 +5,22 @@
 Requirements: 
 * Java
 * Maven 
-* Mongodb running on localhost:27017
+* Docker
+* Mongodb 
 
 Build the jar: 
 
     mvn clean package
+
+Build the container:
+   
+     docker build --build-arg JAR_FILE=target/*.jar -t com.basf/infopipeline .
     
-Run the app: 
+Run the app (set $MONGO_URI , docker run): 
     
-    java -jar target/infopipeline-0.0.1-SNAPSHOT.jar 
+    MONGO_URI=mongodb://localhost:27017/test
+    docker run -e "JAVA_OPTS=-Dspring.data.mongodb.uri=$MONGO_URI" com.basf/infopipeline
+
     
 Then you can use a basic curl command to call the different endpoints
 
@@ -22,8 +29,6 @@ Then you can use a basic curl command to call the different endpoints
     curl -X POST http://localhost:8080/db/drop
     
 
-FIXME: package as docker image
-
 ## Design decisions
 
 Java vs python, I am more comfortable with java thus I chose Java.
@@ -31,7 +36,7 @@ I went with springboot for ease of use, and production ready features. We could 
 Spring provides and easy way to build the rest controllers needed for the API, supports Mongo via spring data (could also be easy to switch to another database using JPA as intermediate and then just switching implementations of repositories)
 
 The zipfile for the patents is uploaded as multipartFile.
-The endpoint for dropping the database is POST as we want to specify that we are taking an action.
+The endpoint for dropping the database is POST as we want to specify that we are taking an action. We could have used DELETE method but I felt DELETE means you are deleting an entity and really we use this a a command so I prefer POST.
 Both endpoints could have been defined as contract first with OpenAPi with Swagger extension, as a mean of documenting the API.
  
 Parsing the xml is done with a DOM parser, with the use of Xpath expressions to retrieve the elements.
