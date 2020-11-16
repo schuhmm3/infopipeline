@@ -50,8 +50,11 @@ For now we persist the NE for each xml file, we could add more info if we had mo
 
 
 ## Scalability and maintainability
+First of all the restApi should be Async , using CompletableFuture so we can do multiple calls without blocking
+Then the services for persisting and Ner should also be Async (use @Async from spring) so they do not block and the first persist and the Ner can be run in parallel.
+Last persist needs to be composed on Ner completion.
 
-Split in various micros to enable scalability (database persist micro, Ner micro with more RAM since its heavy), 
+Also we should split in various micros to enable scalability (database persist micro, Ner micro with more RAM since its heavy), 
 Deploy containerized micros and scale accordingly using platform capabilities (Kubernetes or similar on Openshift, AWS, GKE, Azure)
 Introduce more asynchronicity to avoid blocking threads and isolate I/O (namely database persists)
 Use message broker for communication between micros ( Kafka or similar) [or expose rest APIs but broker approach is superior]
