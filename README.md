@@ -24,10 +24,13 @@ Run the app (set $MONGO_URI , docker run):
     
 Then you can use a basic curl command to call the different endpoints
 
-    curl  -F zipFile=@patents.zip http://localhost:8080/import 
+    curl  -F zipFile=@patents.zip http://localhost:8080/api/import 
 
-    curl -X POST http://localhost:8080/db/drop
+    curl -X POST http://localhost:8080/api/dropdatabase
     
+You can also find (a very light) Swagger doc at http://localhost:8080/swagger-ui/index.html
+    
+
 
 ## Design decisions
 
@@ -65,3 +68,4 @@ Introduce more asynchronicity to avoid blocking threads and isolate I/O (namely 
 Use message broker for communication between micros ( Kafka or similar) [or expose rest APIs but broker approach is superior]
 
 
+Maintainability should rely on a comprehensive test suite with quality assurance (SonarQube, Kiuwan or similar).
