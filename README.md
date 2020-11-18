@@ -14,12 +14,13 @@ Build the jar:
 
 Build the container:
    
-     docker build --build-arg JAR_FILE=target/*.jar -t com.basf/infopipeline .
+    docker build --build-arg JAR_FILE=target/*.jar -t com.basf/infopipeline .
     
 Run the app (set $MONGO_URI , docker run): 
     
-    MONGO_URI=mongodb://localhost:27017/test
-    docker run -e "JAVA_OPTS=-Dspring.data.mongodb.uri=$MONGO_URI" com.basf/infopipeline
+    MONGO_URI=mongodb://192.168.1.138:27017/test
+    
+    docker run -p 8080:8080 -e "JAVA_OPTS=-Dspring.data.mongodb.uri=$MONGO_URI" com.basf/infopipeline
 
     
 Then you can use a basic curl command to call the different endpoints
@@ -30,7 +31,7 @@ Then you can use a basic curl command to call the different endpoints
     
 You can also find (a very light) Swagger doc at http://localhost:8080/swagger-ui/index.html
     
-
+Alternatively there is a docker-compose file to run the software with a mongo docker image (see docker-compose.yml)
 
 ## Design decisions
 
@@ -41,13 +42,15 @@ Spring provides and easy way to build the rest controllers needed for the API, s
 The zipfile for the patents is uploaded as multipartFile.
 The endpoint for dropping the database is POST as we want to specify that we are taking an action. We could have used DELETE method but I felt DELETE means you are deleting an entity and really we use this a a command so I prefer POST.
 Both endpoints could have been defined as contract first with OpenAPi with Swagger extension, as a mean of documenting the API.
+Zipfile max size is set to 256MB with property "spring.servlet.multipart.max-file-size=256MB" so it is configurable.
+
  
 Parsing the xml is done with a DOM parser, with the use of Xpath expressions to retrieve the elements.
 Also we use JAXB mappings to extract the application-reference part as an object.
 I chose this approach because judging from the size of the files there is no problem in parsing them to memory and it is easier to manipulate, if that was a problem we could try using Stax (streaming) for example.
 Also the code is structured in such way that we could switch the parser implementations if we want to try another library.
 
-Inserts in Mongo are done using the java objects.
+Inserts in Mongo are done using the java objects, in collections Patent and NamedEntity.
 
 Depending on the use cases we could use an xsd schema from the patents and do mappings to Java Objects via JAXB, which would allow us to work on the model more easily.
 
@@ -69,3 +72,6 @@ Use message broker for communication between micros ( Kafka or similar) [or expo
 
 
 Maintainability should rely on a comprehensive test suite with quality assurance (SonarQube, Kiuwan or similar).
+Splitting in various smaller micros also enables more maintainability as each one would have a single responsibility and less code is easier to maintain.
+Quality logging and tracing are essential to maintainability, to be able to identify errors quickly and fix them accordingly (use ELK for example).
+
