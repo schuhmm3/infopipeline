@@ -75,7 +75,7 @@ Maintainability should rely on a comprehensive test suite with quality assurance
 Splitting in various smaller micros also enables more maintainability as each one would have a single responsibility and less code is easier to maintain.
 Quality logging and tracing are essential to maintainability, to be able to identify errors quickly and fix them accordingly (use ELK for example).
 
-#Notes
+## Notes
 My tests show that the Ner part is very slow, around 30s each patent and use a lot of CPU, which means processing the whole test archive of 7000 patents would take 2.5 days to complete.
 It is obviously a problem and does not seem like an acceptable time.
 I tried to tune the Simple Ner processor to reduce the number of annotators but it had no effect.
