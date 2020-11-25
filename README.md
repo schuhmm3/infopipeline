@@ -81,3 +81,10 @@ It is obviously a problem and does not seem like an acceptable time.
 I tried to tune the Simple Ner processor to reduce the number of annotators but it had no effect.
 Maybe I need to use the more complex processor and see if performance improves, or find some configuration that would allow for better performance.
 
+
+# Results (Michael)
+
+```
+user@azure:~/challenges/backend/pierre$ curl -F zipFile=@/home/user/challenges/backend/uspat1_201831_back_80001_100000.zip http://localhost:8080/api/import
+(blocking call still running)
+```
